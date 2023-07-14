@@ -11,6 +11,13 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'SKU',
+        'size',
+        'photo_url',
+        'updated_at'
+    ];
+
     public function content(): HasOne {
         return $this->hasOne(ProductContent::class);
     }

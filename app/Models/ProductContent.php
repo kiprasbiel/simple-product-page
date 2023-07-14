@@ -10,6 +10,10 @@ class ProductContent extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'description'
+    ];
+
     public function product(): BelongsTo {
         return $this->belongsTo(Product::class);
     }
