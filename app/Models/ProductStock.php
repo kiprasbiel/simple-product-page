@@ -10,6 +10,11 @@ class ProductStock extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'stock',
+        'location'
+    ];
+
     public function product(): BelongsTo {
         return $this->belongsTo(Product::class, 'SKU', 'SKU');
     }
