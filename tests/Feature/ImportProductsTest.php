@@ -28,4 +28,9 @@ class ImportProductsTest extends TestCase
         $this->assertDatabaseCount('product_contents', 3);
         $this->assertDatabaseCount('product_tags', 1);
     }
+
+    public function test_import_command(): void {
+        $this->artisan('app:import-products')->assertExitCode(0)
+            ->expectsOutputToContain('Product import job added');
+    }
 }
