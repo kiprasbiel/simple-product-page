@@ -49,10 +49,10 @@ class ImportProductStocks implements ShouldQueue
             }
 
             $product->stocks()
-                ->save(new ProductStock([
-                    'stock' => $validatedProduct['stock'],
-                    'location' => $validatedProduct['city'],
-                ]));
+                ->updateOrCreate(
+                    ['location' => $validatedProduct['city']],
+                    ['stock' => $validatedProduct['stock']],
+                );
         }
     }
 
