@@ -36,39 +36,48 @@ class ImportProducts implements ShouldQueue
      */
     private function execute(array $products): void {
         foreach ($products as $product) {
-            $validator = Validator::make($product, [
-                'sku' => 'required|string',
-                'size' => 'required|string',
-                'photo' => 'required|url',
-                'description' => 'required|string',
-                'updated_at' => 'date',
-                'tags'  => 'array',
-            ]);
+            $validatedProduct = $this->validateData($product);
 
-            if ($validator->fails()) {
-                Log::warning('Product importer row validator failed. Failed: ' .
-                    var_export($validator->failed(), true)
-                );
-                Log::warning('Failed row: ' . var_export($product, true));
-                continue;
-            }
-
-            $validated = $validator->validated();
+            if(!$validatedProduct) continue;
 
             $newProduct = Product::create([
-                'SKU' => $validated['sku'],
-                'size' => $validated['size'],
-                'photo_url' => $validated['photo'],
-                'updated_at' => $validated['updated_at']
+                'SKU' => $validatedProduct['sku'],
+                'size' => $validatedProduct['size'],
+                'photo_url' => $validatedProduct['photo'],
+                'updated_at' => $validatedProduct['updated_at']
             ]);
 
             $newProduct->content()->create([
-                'description' => $validated['description']
+                'description' => $validatedProduct['description']
             ]);
 
             $newProduct->tags()->createMany(
-                $validated['tags']
+                $validatedProduct['tags']
             );
         }
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    private function validateData($product): false|array {
+        $validator = Validator::make($product, [
+            'sku' => 'required|string',
+            'size' => 'required|string',
+            'photo' => 'required|url',
+            'description' => 'required|string',
+            'updated_at' => 'date',
+            'tags'  => 'array',
+        ]);
+
+        if ($validator->fails()) {
+            Log::warning('Product importer row validator failed. Failed: ' .
+                var_export($validator->failed(), true)
+            );
+            Log::warning('Failed row: ' . var_export($product, true));
+            return false;
+        }
+
+        return  $validator->validated();
     }
 }
