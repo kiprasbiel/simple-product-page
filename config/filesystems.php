@@ -42,6 +42,12 @@ return [
             'throw' => true,
         ],
 
+        'product_stock_import' => [
+            'driver' => 'local',
+            'root' => storage_path() . env('PRODUCT_STOCK_IMPORT_DIR'),
+            'throw' => true,
+        ],
+
     ],
 
     /*
