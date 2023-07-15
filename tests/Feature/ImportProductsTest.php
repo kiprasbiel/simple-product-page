@@ -33,4 +33,10 @@ class ImportProductsTest extends TestCase
         $this->artisan('app:import-products')->assertExitCode(0)
             ->expectsOutputToContain('Product import job added');
     }
+
+    public function test_import_command_without_files(): void {
+        Storage::disk('product_import')->delete('products-test.json');
+        $this->artisan('app:import-products')->assertExitCode(0)
+            ->expectsOutput('No files to import found.');
+    }
 }
