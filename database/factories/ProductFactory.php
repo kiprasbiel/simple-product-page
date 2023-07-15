@@ -19,7 +19,7 @@ class ProductFactory extends Factory
     {
         return [
             'SKU' => 'KN-' . fake()->numberBetween(0, 10000),
-            'size' => fake()->randomElements(['2XL','M','3XL','XS','L','S','XL']),
+            'size' => fake()->randomElement(['2XL','M','3XL','XS','L','S','XL']),
             'photo_url' => fake()->imageUrl()
         ];
     }
