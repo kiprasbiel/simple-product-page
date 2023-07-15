@@ -25,4 +25,8 @@ class Product extends Model
     public function tags(): HasMany {
         return $this->hasMany(ProductTag::class);
     }
+
+    public function stocks(): HasMany {
+        return $this->hasMany(ProductStock::class, 'SKU', 'SKU');
+    }
 }
