@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
@@ -31,6 +32,30 @@ class AuthTest extends TestCase
             'token'
         ]);
 
+
+        $response = $this->get('/api/products', [
+            'Authorization' => 'Bearer ' . $response['token']
+        ]);
+
+        $response->assertStatus(200);
+    }
+
+    public function test_can_login() {
+        $user = User::factory()->create(['password' => 'password']);
+
+        $response = $this->post('/api/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $response->assertJson([
+            'message' => 'Login successful.'
+        ]);
+
+        $response->assertJsonStructure([
+            'message',
+            'token'
+        ]);
 
         $response = $this->get('/api/products', [
             'Authorization' => 'Bearer ' . $response['token']
