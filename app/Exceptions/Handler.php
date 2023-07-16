@@ -2,7 +2,10 @@
 
 namespace App\Exceptions;
 
+use Error;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -23,8 +26,36 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (AuthenticationException $e, $request){
+            if (!$request->is('api/*')) {
+                return null;
+            }
+
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => 403,
+            ], 403);
         });
+
+        $this->renderable(function (Throwable $e, $request){
+            if (!$request->is('api/*')) {
+                return null;
+            }
+
+            if($e instanceof HttpExceptionInterface){
+                $status = $e->getStatusCode();
+            }
+            else {
+                $status = $e->getCode();
+                $httpStatus = 200;
+            }
+
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $status,
+            ], (isset($httpStatus)) ? $httpStatus : $status);
+        });
+
+
     }
 }
