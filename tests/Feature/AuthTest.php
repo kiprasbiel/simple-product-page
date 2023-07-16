@@ -66,4 +66,15 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_login_with_wrong_credentials() {
+        $response = $this->post('/api/login', [
+            'email' => 'test@test.com',
+            'password' => 'password'
+        ]);
+
+        $response->assertJson([
+            'message' => 'Login failed. Check your credentials.'
+        ], true);
+    }
 }
