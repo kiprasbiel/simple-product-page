@@ -53,4 +53,10 @@ class AuthController extends Controller
 
         return ['message' => 'Login failed. Check your credentials.'];
     }
+
+    public function logout(): array {
+        Auth::user()->currentAccessToken()->delete();
+
+        return ['message' => 'Logged out successfully'];
+    }
 }
