@@ -13,4 +13,29 @@ class AuthTest extends TestCase
             'code' => 403
         ]);
     }
+
+    public function test_can_register_new_user() {
+        $response = $this->post('/api/register', [
+            'name' => 'test',
+            'email' => 'test@test.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $response->assertJson([
+            'message' => 'Registration successful.',
+        ]);
+
+        $response->assertJsonStructure([
+            'message',
+            'token'
+        ]);
+
+
+        $response = $this->get('/api/products', [
+            'Authorization' => 'Bearer ' . $response['token']
+        ]);
+
+        $response->assertStatus(200);
+    }
 }
