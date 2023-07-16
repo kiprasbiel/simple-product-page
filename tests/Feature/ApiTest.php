@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,7 +15,9 @@ class ApiTest extends TestCase
     {
         Product::factory()->count(10)->create();
 
-        $response = $this->get('/api/products');
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/api/products');
 
         $response->assertStatus(200);
 
