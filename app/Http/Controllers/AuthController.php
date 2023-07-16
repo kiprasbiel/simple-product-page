@@ -33,7 +33,7 @@ class AuthController extends Controller
 
         return [
             'message' => 'Registration successful.',
-            'token' => $user->createToken('MyApp')->plainTextToken
+            'token' => $user->createToken(config('app.name'))->plainTextToken
         ];
     }
 }
