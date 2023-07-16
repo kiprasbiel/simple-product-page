@@ -24,6 +24,17 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
+        $this->renderable(function (AuthenticationException $e, $request){
+            if (!$request->is('api/*')) {
+                return null;
+            }
+
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => 403,
+            ], 403);
+        });
+
         $this->renderable(function (Throwable $e, $request){
             if (!$request->is('api/*')) {
                 return null;
@@ -34,11 +45,6 @@ class Handler extends ExceptionHandler
             ], $e->getStatusCode());
         });
 
-        $this->renderable(function (AuthenticationException $e){
-            return response()->json([
-                'message' => $e->getMessage(),
-                'code' => 403,
-            ], 403);
-        });
+
     }
 }
