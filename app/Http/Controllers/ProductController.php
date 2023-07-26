@@ -11,7 +11,7 @@ class ProductController extends Controller
         return Product::with(['content', 'tags', 'stocks'])->get();
     }
 
-    public function show(Product $product): Product {
-        return $product;
+    public function show(string $sku): Product {
+        return Product::where('SKU', $sku)->first();
     }
 }
