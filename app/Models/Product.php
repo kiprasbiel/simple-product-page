@@ -18,14 +18,14 @@ class Product extends Model
         'updated_at'
     ];
 
-    protected $with = ['content', 'tags', 'stocks'];
+    protected $with = ['content', 'tag', 'stocks'];
 
     public function content(): HasOne {
         return $this->hasOne(ProductContent::class);
     }
 
-    public function tags(): HasMany {
-        return $this->hasMany(ProductTag::class);
+    public function tag(): HasOne {
+        return $this->hasOne(ProductTag::class);
     }
 
     public function stocks(): HasMany {
