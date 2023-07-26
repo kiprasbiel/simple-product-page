@@ -18,6 +18,8 @@ class Product extends Model
         'updated_at'
     ];
 
+    protected $with = ['content', 'tags', 'stocks'];
+
     public function content(): HasOne {
         return $this->hasOne(ProductContent::class);
     }
