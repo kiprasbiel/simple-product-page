@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Product;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Bus\Queueable;
@@ -51,9 +52,15 @@ class ImportProducts implements ShouldQueue
                 'description' => $validatedProduct['description']
             ]);
 
-            $newProduct->tags()->createMany(
-                $validatedProduct['tags']
-            );
+            if($validatedProduct['tags']){
+                $tags = [];
+                foreach ($validatedProduct['tags'] as $tag) {
+                    $tags[] = Tag::firstOrCreate(
+                        $tag
+                    );
+                }
+                $newProduct->tags()->saveMany($tags);
+            }
         }
     }
 
