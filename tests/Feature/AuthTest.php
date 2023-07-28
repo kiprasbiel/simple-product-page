@@ -12,22 +12,20 @@ class AuthTest extends TestCase
 
     public function test_unauthenticated_response_products() {
         $response = $this->get('/api/products');
-        $response->assertJson([
-            'message' => 'Unauthenticated.',
-            'code' => 403
-        ]);
+        $this->testIfUnauthenticated($response);
     }
 
     public function test_unauthenticated_response_single_product() {
         $response = $this->get('/api/product/SKU-001');
-        $response->assertJson([
-            'message' => 'Unauthenticated.',
-            'code' => 403
-        ]);
+        $this->testIfUnauthenticated($response);
     }
 
     public function test_unauthenticated_response_similar_products() {
         $response = $this->get('/api/product/SKU-001/similar');
+        $this->testIfUnauthenticated($response);
+    }
+
+    private function testIfUnauthenticated($response): void {
         $response->assertJson([
             'message' => 'Unauthenticated.',
             'code' => 403
