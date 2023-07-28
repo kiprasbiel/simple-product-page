@@ -10,8 +10,16 @@ class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_unauthenticated_response() {
+    public function test_unauthenticated_response_products() {
         $response = $this->get('/api/products');
+        $response->assertJson([
+            'message' => 'Unauthenticated.',
+            'code' => 403
+        ]);
+    }
+
+    public function test_unauthenticated_response_single_product() {
+        $response = $this->get('/api/product/SKU-001');
         $response->assertJson([
             'message' => 'Unauthenticated.',
             'code' => 403
