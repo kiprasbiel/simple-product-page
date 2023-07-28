@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -37,5 +38,11 @@ class Product extends Model
 
     public function stocks(): HasMany {
         return $this->hasMany(ProductStock::class, 'SKU', 'SKU');
+    }
+
+    public function similarProducts() {
+        return $this->tags()->with(['products' => function(Builder $query) {
+            $query->without(['content', 'tags', 'stocks']);
+        }])->get();
     }
 }
