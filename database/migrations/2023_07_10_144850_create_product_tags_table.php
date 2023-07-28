@@ -17,9 +17,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('products')
                 ->onDelete('cascade');
-            $table->string('title');
             $table->timestamps();
-            $table->unique(['product_id', 'title']);
         });
     }
 
