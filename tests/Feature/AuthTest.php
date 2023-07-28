@@ -26,6 +26,14 @@ class AuthTest extends TestCase
         ]);
     }
 
+    public function test_unauthenticated_response_similar_products() {
+        $response = $this->get('/api/product/SKU-001/similar');
+        $response->assertJson([
+            'message' => 'Unauthenticated.',
+            'code' => 403
+        ]);
+    }
+
     public function test_can_register_new_user() {
         $response = $this->post('/api/register', [
             'name' => 'test',
