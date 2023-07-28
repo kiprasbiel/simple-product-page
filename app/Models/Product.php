@@ -41,8 +41,10 @@ class Product extends Model
     }
 
     public function similarProducts() {
-        return $this->tags()->with(['products' => function(Builder $query) {
+        $parentId = $this->id;
+        return $this->tags()->with(['products' => function(Builder $query) use ($parentId) {
             $query->without(['content', 'tags', 'stocks']);
+            $query->whereNot('products.id', $parentId);
         }])->get();
     }
 }
