@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductsResource;
-use App\Http\Resources\SingleProductResource;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -19,10 +18,11 @@ class ProductController extends Controller
     }
 
     public function show(string $sku) {
-        return Cache::remember("SKU_$sku", now()->addMinutes(10),
+        $product = Cache::remember("SKU_$sku", now()->addMinutes(10),
             fn() =>
-            new SingleProductResource(Product::where('SKU', $sku)->first())
+            Product::without('stocks')->where('SKU', $sku)->first()
         );
+        return $product->loadMissing('stocks');
     }
 
     public function similarProducts(Product $product): Collection {
