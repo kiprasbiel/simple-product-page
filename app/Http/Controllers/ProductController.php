@@ -26,6 +26,7 @@ class ProductController extends Controller
     }
 
     public function similarProducts(Product $product): Collection {
-        return $product->similarProducts();
+        return Cache::remember("similar_SKU_$product->SKU", now()->addMinutes(10),
+            fn() => $product->similarProducts());
     }
 }
