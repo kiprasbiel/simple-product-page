@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -40,11 +41,14 @@ class Product extends Model
         return $this->hasMany(ProductStock::class, 'SKU', 'SKU');
     }
 
-    public function similarProducts() {
+    public function similarProducts(): Collection|array {
         $parentId = $this->id;
-        return $this->tags()->with(['products' => function(Builder $query) use ($parentId) {
-            $query->without(['content', 'tags', 'stocks']);
-            $query->whereNot('products.id', $parentId);
-        }])->get();
+        return $this->tags()->wherehas('products', function(Builder $query) use ($parentId) {
+                    $query->without(['content', 'tags', 'stocks']);
+                    $query->whereNot('products.id', $parentId);
+                })->with(['products' => function(Builder $query) use ($parentId){
+                    $query->without(['content', 'tags', 'stocks']);
+                    $query->whereNot('products.id', $parentId);
+                }])->get();
     }
 }
